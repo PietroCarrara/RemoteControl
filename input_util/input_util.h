@@ -6,7 +6,6 @@
 #include <pspsdk.h>
 #include <stdio.h>
 
-void inputInit();
 void inputUpdate();
 
 int inputIsButtonDown(enum PspCtrlButtons bt);

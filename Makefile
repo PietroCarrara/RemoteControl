@@ -17,7 +17,7 @@ EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = Remote Control
 
 # Compile the input_util module functions
-INPUT_UTIL_OBJS = input_util_0000.o input_util_0001.o input_util_0002.o input_util_0003.o input_util_0004.o input_util_0005.o input_util_0006.o
+INPUT_UTIL_OBJS = input_util_0000.o input_util_0001.o input_util_0002.o input_util_0003.o input_util_0004.o input_util_0005.o
 $(INPUT_UTIL_OBJS): input_util.S 
 	psp-gcc $(CFLAGS) -DF_$* $< -c -o $@ 
 

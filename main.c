@@ -72,13 +72,13 @@ void loadModules() {
 
 	SceKernelLMOption option = {
 		.size = sizeof(option),
-		.mpidtext = (SceUID) 1, // SceUID mpid 1 = kernel partition
-		.mpiddata = (SceUID) 1,
+		.mpidtext = (SceUID) 2, // SceUID mpid 1 = kernel partition
+		.mpiddata = (SceUID) 2, // SceUID mpid 2 = user partition
 		.position = 0,
 		.access = 1
 	};
 
-	printf("Loading module...\n");
+	// printf("Loading module...\n");
 
 	SceUID inpMod = sceKernelLoadModule("ms0:/PSP/GAME/RemoteControl/input_util.prx", 0, &option);
 
@@ -89,25 +89,7 @@ void loadModules() {
 		return;
 	}
 
-	printf("Module Loaded!\nStarting Module...\n");
-
-	/*
-	SceModule* mod = sceKernelFindModuleByUID(inpMod);
-	printf("mod %p\n", mod);
-	if(mod != NULL)
-	{
-		printf("Attr %04X, Version %x.%x\n", mod->attribute, mod->version[0], mod->version[1]);
-		printf("Name %s\n", mod->modname);
-		printf("Text %08X, Size %08X, Data Size %08X\n", mod->text_addr, mod->text_size, mod->data_size);
-		printf("Entry Addr %08X\n", mod->entry_addr);
-		printf("Stub %p %08X, Ent %p %08X\n", mod->stub_top, mod->stub_size, mod->ent_top, mod->ent_size);
-		int i;
-		for(i = 0; i < mod->nsegment; i++)
-		{
-			printf("Segment[%d] %08X %08X\n", i, mod->segmentaddr[i], mod->segmentsize[i]);
-		}
-	}	
-	*/
+	// printf("Module Loaded!\nStarting Module...\n");
 
 	SceKernelSMOption sOp = {
 		.size = sizeof(sOp),
@@ -121,43 +103,21 @@ void loadModules() {
 		return;
 	}
 
-	printf("Module started!\n");
+	// printf("Module started!\n");
 
-	printf("Status of started module: %d", status);
+	// printf("Status of started module: %d\n", status);
 }
 
 int main()
 {
 	pspDebugScreenInit();
-
-	// pspDebugInstallKprintfHandler(NULL);
-	// pspDebugInstallErrorHandler(NULL);
-	// pspDebugInstallStdoutHandler(pspDebugScreenPrintData);
-	// pspSdkInstallNoPlainModuleCheckPatch();
-
 	SetupCallbacks();
-
-	printf("Callbacks prontos!");
 
 	loadModules();
 
-	inputInit();
-
-	// It returns trash for now
-	printf("The X is up...\n");
-	while (inputIsButtonUp(PSP_CTRL_CROSS)) {
-		inputUpdate();
-		printf("Waiting for you to press the X\n");
-	}
-
-	// It returns trash for now
-	printf("The X is down...\n");
-	while (inputIsButtonDown(PSP_CTRL_CROSS)) {
-		inputUpdate();
-		printf("Waiting for you to release the X\n");
-	}
-
 	graphicsInit();
+
+	printf("Connecting to a network...");
 
 	// Connect to network
 	do {

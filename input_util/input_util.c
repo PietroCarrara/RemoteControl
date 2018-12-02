@@ -1,21 +1,15 @@
 #include "input_util.h"
 
 // Kernel module
-PSP_MODULE_INFO("InputUtil", 0x1000, 1, 0); 
+PSP_MODULE_INFO("InputUtil", PSP_MODULE_USER, 1, 0); 
+PSP_NO_CREATE_MAIN_THREAD();
 
 SceCtrlData current, prev;
 
-void inputInit() {
-	sceCtrlSetSamplingCycle(0);
-	sceCtrlSetSamplingMode(PSP_CTRL_MODE_DIGITAL);
-}
-
 void inputUpdate() {
-	// pspDebugScreenPrintf("Updated input!!!");
-
 	prev = current;
 
-	sceCtrlPeekBufferPositive(&current, 1);
+	sceCtrlReadBufferPositive(&current, 1);
 }
 
 int inputIsButtonDown(enum PspCtrlButtons bt) {
@@ -37,9 +31,13 @@ int inputIsButtonReleased(enum PspCtrlButtons bt) {
 
 }
 
-int main(int argc, char **argv)
-{
-	sceKernelSleepThreadCB();
+int module_start(SceSize arg, void* argp) {
+	sceCtrlSetSamplingCycle(0);
+	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
+	return 0;
+}
+
+int module_stop(SceSize arg, void* argp) {
 	return 0;
 }
