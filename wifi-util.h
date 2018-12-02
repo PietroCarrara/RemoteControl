@@ -1,8 +1,6 @@
 #ifndef WIFI_UTIL_H
 #define WIFI_UTIL_H
 
-#include "input-util.h"
-
 #include <pspdisplay.h>
 #include <pspkernel.h>
 #include <pspnet.h>

@@ -1,6 +1,6 @@
 release: all
-	psp-build-exports -k input_exp.exp
-	psp-build-exports -s -k -v input_exp.exp
+	psp-build-exports -k input_util_exp.exp
+	psp-build-exports -s -k -v input_util_exp.exp
 
 TARGET = input_util
 OBJS = input_util.o
@@ -8,7 +8,7 @@ OBJS = input_util.o
 # Define to build this as a prx (instead of a static elf)
 BUILD_PRX = 1
 # Define the name of our custom exports (minus the .exp extension)
-PRX_EXPORTS = input_exp.exp
+PRX_EXPORTS = input_util_exp.exp
 
 USE_KERNEL_LIBS = 1
 
@@ -19,10 +19,6 @@ ASFLAGS = $(CFLAGS)
 LDFLAGS = -nostartfiles
 
 LIBDIR =
-
-INPUT_OBJS = input_util_0000.o input_util_0001.o input_util_0002.o input_util_0003.o input_util_0004.o
-$(INPUT_OBJS): input_util.S
-	psp-gcc $(CFLAGS) -DF_$* $< -c -o $@ 
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
