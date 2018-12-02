@@ -1,4 +1,8 @@
-#include "input-util.h"
+#include "input_util.h"
+
+// Kernel module
+PSP_MODULE_INFO("InputUtil", 0x1000, 1, 0); 
+PSP_NO_CREATE_MAIN_THREAD(); 
 
 static SceCtrlData current, prev;
 
@@ -29,4 +33,13 @@ int inputIsButtonPressed(enum PspCtrlButtons bt) {
 int inputIsButtonReleased(enum PspCtrlButtons bt) {
 	// Was pressed before but is not now
 	return (!(current.Buttons & bt)) && prev.Buttons & bt;
+
+}
+
+int module_start (SceSize argc, void* argp) { 
+        return 0; 
+} 
+
+int module_stop (SceSize args, void* argp) { 
+        return 0;
 }
