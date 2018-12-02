@@ -2,7 +2,9 @@
 #define INPUT_UTIL_H
 
 #include <pspctrl.h>
+#include <pspkernel.h>
 #include <pspsdk.h>
+#include <stdio.h>
 
 void inputInit();
 void inputUpdate();

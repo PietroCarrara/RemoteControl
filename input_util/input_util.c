@@ -2,9 +2,8 @@
 
 // Kernel module
 PSP_MODULE_INFO("InputUtil", 0x1000, 1, 0); 
-PSP_NO_CREATE_MAIN_THREAD(); 
 
-static SceCtrlData current, prev;
+SceCtrlData current, prev;
 
 void inputInit() {
 	sceCtrlSetSamplingCycle(0);
@@ -12,9 +11,11 @@ void inputInit() {
 }
 
 void inputUpdate() {
+	// pspDebugScreenPrintf("Updated input!!!");
+
 	prev = current;
 
-	sceCtrlReadBufferPositive(&current, 1);
+	sceCtrlPeekBufferPositive(&current, 1);
 }
 
 int inputIsButtonDown(enum PspCtrlButtons bt) {
@@ -22,7 +23,7 @@ int inputIsButtonDown(enum PspCtrlButtons bt) {
 }
 
 int inputIsButtonUp(enum PspCtrlButtons bt) {
-	return prev.Buttons & bt;
+	return !(current.Buttons & bt);
 }
 
 int inputIsButtonPressed(enum PspCtrlButtons bt) {
@@ -36,10 +37,9 @@ int inputIsButtonReleased(enum PspCtrlButtons bt) {
 
 }
 
-int module_start (SceSize argc, void* argp) { 
-        return 0; 
-} 
+int main(int argc, char **argv)
+{
+	sceKernelSleepThreadCB();
 
-int module_stop (SceSize args, void* argp) { 
-        return 0;
+	return 0;
 }

@@ -10,13 +10,14 @@ BUILD_PRX = 1
 # Define the name of our custom exports (minus the .exp extension)
 PRX_EXPORTS = input_util_exp.exp
 
-USE_KERNEL_LIBS = 1
+USE_PSPSDK_LIBC = 1
+# USE_KERNEL_LIBS = 1
 
 INCDIR = 
 CFLAGS = -O2 -G0 -Wall
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS) 
-LDFLAGS = -nostartfiles
+LDFLAGS =
 
 LIBDIR =
 
