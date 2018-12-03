@@ -13,4 +13,8 @@ int inputIsButtonUp(enum PspCtrlButtons bt);
 int inputIsButtonPressed(enum PspCtrlButtons bt);
 int inputIsButtonReleased(enum PspCtrlButtons bt);
 
+
+SceCtrlData inputGetCurrent();
+SceCtrlData inputGetPrev();
+
 #endif

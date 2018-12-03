@@ -31,6 +31,14 @@ int inputIsButtonReleased(enum PspCtrlButtons bt) {
 
 }
 
+SceCtrlData inputGetCurrent() {
+	return current;
+}
+
+SceCtrlData inputGetPrev() {
+	return prev;
+}
+
 int module_start(SceSize arg, void* argp) {
 	sceCtrlSetSamplingCycle(0);
 	sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);

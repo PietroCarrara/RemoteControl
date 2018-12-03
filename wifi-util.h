@@ -6,6 +6,7 @@
 #include <pspnet.h>
 #include <pspnet_apctl.h>
 #include <pspnet_inet.h>
+#include <pspgu.h>
 #include <psputility.h>
 #include <psputility_netmodules.h>
 #include <stdbool.h>

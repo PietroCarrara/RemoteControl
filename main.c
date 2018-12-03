@@ -1,6 +1,7 @@
 #include "wifi-util.h"
 #include "graphics.h"
 #include "input_util/input_util.h"
+#include "remote.h"
 
 #include <pspdebug.h>
 #include <pspmodulemgr.h>
@@ -49,21 +50,36 @@ int SetupCallbacks(void)
 }
 
 void handleInput() {
+
+	SceCtrlData curr, prev;
 	
 	while(true) {
 		inputUpdate();
+		prev = inputGetPrev();
+		curr = inputGetCurrent();
 
-		if (inputIsButtonPressed(PSP_CTRL_NOTE)) {
-			break;
+		if (prev.Buttons != curr.Buttons) {
+			// The buttons that were not changed will turn to 1,
+			// and the others will turn to 0
+			unsigned int buttons = prev.Buttons ^ curr.Buttons;
+
+			int i;
+			unsigned int btn = 1;
+			for (i = 0; i < 32; i++) {
+				// If <btn> is one of the buttons that changed...
+				if (btn & buttons) {
+					if (inputIsButtonPressed(btn)) {
+						printf("You've pressed %s!\n", BUTTON_TO_STRING(btn));
+						remoteSetState(btn, true);
+					} else {
+						printf("You've released %s!\n", BUTTON_TO_STRING(btn));
+						remoteSetState(btn, false);
+					}
+				}
+				btn = btn << 1;
+			}
 		}
 
-		if (inputIsButtonPressed(PSP_CTRL_CROSS)) {
-			printf("\nX");
-		}
-
-		if (inputIsButtonPressed(PSP_CTRL_TRIANGLE)) {
-			break;
-		}
 	}
 
 }
@@ -115,7 +131,7 @@ int main()
 
 	loadModules();
 
-	graphicsInit();
+	// graphicsInit();
 
 	printf("Connecting to a network...");
 
@@ -147,7 +163,14 @@ int main()
 
 	graphicsClearScreen();
 
-	printf("You are connected!");
+	printf("You are connected!\n");
+
+	printf("Initializing connection...\n");
+	if (remoteInit("192.168.0.101", 8080)) {
+		printf("Success!\n");
+	} else {
+		printf("Fail!\n");
+	}
 
 	handleInput();
 	

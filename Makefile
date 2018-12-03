@@ -7,7 +7,7 @@ USE_PSPSDK_LIBC = 1
 
 TARGET = remote
 
-OBJS   = main.o wifi-util.o graphics.o $(INPUT_UTIL_OBJS)
+OBJS   = main.o wifi-util.o graphics.o remote.o $(INPUT_UTIL_OBJS)
 CFLAGS = -O2 -G0 -Wall 
 ASFLAGS = $(CFLAGS) 
 LIBS = -lpsphttp -lpspssl -lpspgu
@@ -17,7 +17,7 @@ EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = Remote Control
 
 # Compile the input_util module functions
-INPUT_UTIL_OBJS = input_util_0000.o input_util_0001.o input_util_0002.o input_util_0003.o input_util_0004.o input_util_0005.o
+INPUT_UTIL_OBJS = input_util_0000.o input_util_0001.o input_util_0002.o input_util_0003.o input_util_0004.o input_util_0005.o input_util_0006.o input_util_0007.o
 $(INPUT_UTIL_OBJS): input_util.S 
 	psp-gcc $(CFLAGS) -DF_$* $< -c -o $@ 
 

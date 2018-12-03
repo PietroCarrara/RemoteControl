@@ -68,7 +68,7 @@ bool wifiConnect()
 		}
 
 		sceDisplayWaitVblankStart();
-		// sceGuSwapBuffers();
+		sceGuSwapBuffers();
 	}
 
 	// Check for access point connection
