@@ -6,8 +6,10 @@
 #include <psphttp.h>
 #include <stdbool.h>
 #include <psputility_netmodules.h>
+#include <stdio.h>
 
-const char* BUTTON_TO_STRING(enum PspCtrlButtons bt);
 bool remoteInit(char* host, unsigned short port);
+bool remoteSetState(enum PspCtrlButtons bt, bool isDown);
+bool setValue(char* stick, unsigned char val);
 
 #endif

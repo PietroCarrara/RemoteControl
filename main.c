@@ -58,6 +58,13 @@ void handleInput() {
 		prev = inputGetPrev();
 		curr = inputGetCurrent();
 
+		if (prev.Lx != curr.Lx) {
+			remoteSetValue("LX", curr.Lx);
+		}
+		if (prev.Ly != curr.Ly) {
+			remoteSetValue("LY", curr.Ly);
+		}
+
 		if (prev.Buttons != curr.Buttons) {
 			// The buttons that were not changed will turn to 1,
 			// and the others will turn to 0
@@ -69,17 +76,14 @@ void handleInput() {
 				// If <btn> is one of the buttons that changed...
 				if (btn & buttons) {
 					if (inputIsButtonPressed(btn)) {
-						printf("You've pressed %s!\n", BUTTON_TO_STRING(btn));
 						remoteSetState(btn, true);
 					} else {
-						printf("You've released %s!\n", BUTTON_TO_STRING(btn));
 						remoteSetState(btn, false);
 					}
 				}
 				btn = btn << 1;
 			}
 		}
-
 	}
 
 }

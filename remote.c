@@ -3,7 +3,7 @@
 static int connectionID;
 
 // Well... I couldn't think of any better way of doing this ;)
-const char* BUTTON_TO_STRING(enum PspCtrlButtons bt) {
+static const char* buttonToString(enum PspCtrlButtons bt) {
 	switch(bt) {
 		case PSP_CTRL_SELECT:
 			return "SELECT";
@@ -43,7 +43,7 @@ bool remoteInit(char* host, unsigned short port) {
 	sceUtilityLoadNetModule(PSP_NET_MODULE_PARSEHTTP);
 	sceUtilityLoadNetModule(PSP_NET_MODULE_HTTP);
 
-	if (sceHttpInit(20000) < 0) {
+	if (sceHttpInit(20000 * 256) < 0) {
 		pspDebugScreenPrintf("Could not init http library!\n");
 	}
 
@@ -64,7 +64,34 @@ bool remoteInit(char* host, unsigned short port) {
 
 bool remoteSetState(enum PspCtrlButtons bt, bool isDown) {
 
-	int req = sceHttpCreateRequest(connectionID, PSP_HTTP_METHOD_POST, "/", 0);
+	char url[128];
+
+	sprintf(url, "/SetState/%s/%s", buttonToString(bt), isDown ? "true" : "false");
+
+	int req = sceHttpCreateRequest(connectionID, PSP_HTTP_METHOD_POST, url, 0);
+	if (req < 0) {
+		pspDebugScreenPrintf("Could not create request!\n");
+		return false;
+	}
+
+	if (sceHttpSendRequest(req, NULL, 0) < 0) {
+		pspDebugScreenPrintf("Could not send request!");
+		return false;
+	}
+
+	sceHttpDeleteRequest(req);
+
+	return true;
+}
+
+// unsigned char == byte
+bool remoteSetValue(char* stick, unsigned char val) {
+	
+	char url[128];
+
+	sprintf(url, "/SetValue/%s/%d", stick, val);
+
+	int req = sceHttpCreateRequest(connectionID, PSP_HTTP_METHOD_POST, url, 0);
 	if (req < 0) {
 		pspDebugScreenPrintf("Could not create request!\n");
 		return false;
