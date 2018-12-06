@@ -10,7 +10,7 @@ TARGET = remote
 OBJS   = main.o wifi-util.o graphics.o remote.o $(INPUT_UTIL_OBJS)
 CFLAGS = -O2 -G0 -Wall 
 ASFLAGS = $(CFLAGS) 
-LIBS = -lpsphttp -lpspssl -lpspgu
+LIBS = -lpsphttp -lpspssl -lpspgu -lpsputility -lpspnet -lpspnet_inet -lpspnet_apctl -lm
 
 EXTRA_TARGETS = EBOOT.PBP 
 

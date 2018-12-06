@@ -1,6 +1,8 @@
 #include "remote.h"
 
-static int connectionID;
+static int sockID = -1;
+
+#define HTONS(n) (((((unsigned short)(n) & 0xFF)) << 8) | (((unsigned short)(n) & 0xFF00) >> 8))
 
 // Well... I couldn't think of any better way of doing this ;)
 static const char* buttonToString(enum PspCtrlButtons bt) {
@@ -35,27 +37,34 @@ static const char* buttonToString(enum PspCtrlButtons bt) {
 	}
 }
 
-bool remoteInit(char* host, unsigned short port) {
+bool remoteInit(in_addr_t host, uint16_t port) {
 
-	sceUtilityLoadNetModule(PSP_NET_MODULE_COMMON);
-	sceUtilityLoadNetModule(PSP_NET_MODULE_INET);
-	sceUtilityLoadNetModule(PSP_NET_MODULE_PARSEURI);
-	sceUtilityLoadNetModule(PSP_NET_MODULE_PARSEHTTP);
-	sceUtilityLoadNetModule(PSP_NET_MODULE_HTTP);
+	pspDebugScreenPrintf("Creating socket...\n");
 
-	if (sceHttpInit(20000 * 256) < 0) {
-		pspDebugScreenPrintf("Could not init http library!\n");
+	sockID = sceNetInetSocket(AF_INET, SOCK_STREAM, 0);
+	if (sockID < 0) {
+		printf("Couldn't create socket!\n");
 	}
 
-	int template = sceHttpCreateTemplate("Remote Control (PSP/v0.2)", 1, 0);
-	if (template < 0) {
-		pspDebugScreenPrintf("remoteInit: could not create template: returned %d\n", template);
-		return false;
-	}
+	struct sockaddr_in addr;
 
-	connectionID = sceHttpCreateConnection(template, host, "http", port, 0);
-	if (connectionID < 0) {
-		pspDebugScreenPrintf("remoteInit: could not create connection: returned %d\n", connectionID);
+    addr.sin_family = AF_INET; 
+    addr.sin_port = HTONS(port); 
+    addr.sin_addr.s_addr = host; 
+
+	pspDebugScreenPrintf("Connecting to: %X:%d\n", addr.sin_addr.s_addr, HTONS(addr.sin_port));
+
+	pspDebugScreenPrintf("Set blocking mode...\n");
+
+	// Set noblock to false
+	int NoBlock = 0;
+    sceNetInetSetsockopt(sockID, SOL_SOCKET, SO_NONBLOCK, &NoBlock, sizeof(NoBlock)); 
+
+	pspDebugScreenPrintf("Connecting...\n");
+
+    int err = sceNetInetConnect(sockID, (struct sockaddr *)(&addr), sizeof(addr)); 
+	if (err < 0) {
+		pspDebugScreenPrintf("Could not connect to the host: returned %d\n", err);
 		return false;
 	}
 
@@ -68,18 +77,7 @@ bool remoteSetState(enum PspCtrlButtons bt, bool isDown) {
 
 	sprintf(url, "/SetState/%s/%s", buttonToString(bt), isDown ? "true" : "false");
 
-	int req = sceHttpCreateRequest(connectionID, PSP_HTTP_METHOD_POST, url, 0);
-	if (req < 0) {
-		pspDebugScreenPrintf("Could not create request!\n");
-		return false;
-	}
-
-	if (sceHttpSendRequest(req, NULL, 0) < 0) {
-		pspDebugScreenPrintf("Could not send request!");
-		return false;
-	}
-
-	sceHttpDeleteRequest(req);
+	printf("%s\n", url);
 
 	return true;
 }
@@ -91,18 +89,7 @@ bool remoteSetValue(char* stick, unsigned char val) {
 
 	sprintf(url, "/SetValue/%s/%d", stick, val);
 
-	int req = sceHttpCreateRequest(connectionID, PSP_HTTP_METHOD_POST, url, 0);
-	if (req < 0) {
-		pspDebugScreenPrintf("Could not create request!\n");
-		return false;
-	}
-
-	if (sceHttpSendRequest(req, NULL, 0) < 0) {
-		pspDebugScreenPrintf("Could not send request!");
-		return false;
-	}
-
-	sceHttpDeleteRequest(req);
+	printf("%s\n", url);
 
 	return true;
 }

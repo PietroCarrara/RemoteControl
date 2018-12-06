@@ -7,6 +7,7 @@
 #include <pspmodulemgr.h>
 #include <pspkernel.h>
 #include <pspctrl.h>
+#include <arpa/inet.h>
 #include <stdbool.h>
 
 PSP_MODULE_INFO("Remote Controller", PSP_MODULE_USER, 0, 1);
@@ -170,7 +171,9 @@ int main()
 	printf("You are connected!\n");
 
 	printf("Initializing connection...\n");
-	if (remoteInit("192.168.0.101", 8080)) {
+
+	in_addr_t host = sceNetInetInetAddr("192.168.0.101");
+	if (remoteInit(host, 8080)) {
 		printf("Success!\n");
 	} else {
 		printf("Fail!\n");
