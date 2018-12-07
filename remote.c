@@ -73,11 +73,11 @@ bool remoteInit(in_addr_t host, uint16_t port) {
 
 bool remoteSetState(enum PspCtrlButtons bt, bool isDown) {
 
-	char url[128];
+	char url[128] = {0};
 
-	sprintf(url, "/SetState/%s/%s", buttonToString(bt), isDown ? "true" : "false");
+	sprintf(url, "SetState:%s:%s", buttonToString(bt), isDown ? "true" : "false");
 
-	printf("%s\n", url);
+	sceNetInetSend(sockID, url, sizeof(url), 1);
 
 	return true;
 }
@@ -85,11 +85,11 @@ bool remoteSetState(enum PspCtrlButtons bt, bool isDown) {
 // unsigned char == byte
 bool remoteSetValue(char* stick, unsigned char val) {
 	
-	char url[128];
+	char url[128] = {0};
 
-	sprintf(url, "/SetValue/%s/%d", stick, val);
+	sprintf(url, "SetValue:%s:%d", stick, val);
 
-	printf("%s\n", url);
+	sceNetInetSend(sockID, url, sizeof(url), 1);
 
 	return true;
 }
